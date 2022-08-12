@@ -1,9 +1,11 @@
+using System;
+
 namespace Minecraft
 {
     public class Entity
     {
-        public int Id;
-        public string Name;
+        protected int Id;
+        protected readonly string Name;
 
         public Entity(string name, int id)
         {
@@ -14,6 +16,7 @@ namespace Minecraft
         public virtual void Destroy()
         {
             Id = -1;
+            Console.WriteLine("Entity.Destroy got called");
         }
 
         public override string ToString()
@@ -25,38 +28,39 @@ namespace Minecraft
     public class Mob : Entity
     {
         private const int InitialHealth = 20;
-        public int Health;
+        private int _health;
 
         public Mob(string name, int id, int health) : base(name, id)
         {
-            Health = health;
+            _health = health;
         }
 
         public Mob(string name, int id) : base(name, id)
         {
-            Health = InitialHealth;
+            _health = InitialHealth;
         }
 
         public int Damage(int dmg)
         {
-            Health = Health - dmg;
-            if (Health <= 0)
+            _health -= dmg;
+            if (_health <= 0)
             {
                 Destroy();
             }
 
-            return Health;
+            return _health;
         }
 
         public override void Destroy()
         {
             base.Destroy();
-            Health = 0;
+            _health = 0;
+            Console.WriteLine("Mob.Destroy got called");
         }
 
         public override string ToString()
         {
-            return $"Mob(name=\"{Name}\", id={Id}, health={Health})";
+            return $"Mob(name=\"{Name}\", id={Id}, health={_health})";
         }
     }
 }

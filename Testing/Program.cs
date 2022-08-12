@@ -1,25 +1,59 @@
 ﻿using System;
+using System.Collections.Generic;
+using Minecraft;
 
 namespace Testing
 {
     class Program
     {
-        static void Main(string[] args)
+        private static Random _rand = new();
+        private static List<Entity> _globalEntities = new();
+
+        static void Main()
         {
-            var mob = new Minecraft.Mob("Mob 1", 99, 15);
-            var mob2 = new Minecraft.Mob("Mob 2", 98);
-            
-            Console.WriteLine(mob);
-            Console.WriteLine(mob.Damage(10));
-            Console.WriteLine(mob);
-            Console.WriteLine(mob.Damage(7));
-            Console.WriteLine(mob);
-            
+            Mob mob = new("Mob 1", 99, 15);
+            Mob mob2 = new("Mob 2", 98);
+            Entity tnt = new("TNT", 5);
+
+            _globalEntities.Add(mob);
+            _globalEntities.Add(mob2);
+            _globalEntities.Add(tnt);
+            SpawnRandomMob();
+            SpawnRandomMob();
+
+            foreach (var e in _globalEntities)
+            {
+                Console.WriteLine($"  {e}");
+            }
+
             Console.WriteLine();
-            
-            Console.WriteLine(mob2);
-            mob2.Destroy();
-            Console.WriteLine(mob2);
+            DespawnAll();
+            Console.WriteLine();
+
+            foreach (var e in _globalEntities)
+            {
+                Console.WriteLine($"  {e}");
+            }
+        }
+
+        private static void SpawnRandomMob()
+        {
+            var r = _rand.Next(0, 3);
+
+            if (r == 0)
+                _globalEntities.Add(new Mob("Zombie", 10, 15));
+            else if (r == 1)
+                _globalEntities.Add(new Mob("Skeleton", 11, 10));
+            else if (r == 2)
+                _globalEntities.Add(new Mob("Spider", 12, 10));
+        }
+
+        private static void DespawnAll()
+        {
+            foreach (var entity in _globalEntities)
+            {
+                entity.Destroy();
+            }
         }
     }
 }
