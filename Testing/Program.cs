@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using Minecraft;
+using Testing.Shapes;
 
 namespace Testing
 {
@@ -11,29 +12,17 @@ namespace Testing
 
         static void Main()
         {
-            Mob mob = new("Mob 1", 99, 15);
-            Mob mob2 = new("Mob 2", 98);
-            Entity tnt = new("TNT", 5);
+            List<IPoint> shapes = new();
+            var circle = new Circle(5, 1, 1);
+            var square = new Square(2, -5, -5);
+            var point = new Point(-1, 4);
+            var point2 = new Point(10, 2);
+            shapes.Add(circle);
+            shapes.Add(square);
+            shapes.Add(point);
+            shapes.Add(point2);
 
-            _globalEntities.Add(mob);
-            _globalEntities.Add(mob2);
-            _globalEntities.Add(tnt);
-            SpawnRandomMob();
-            SpawnRandomMob();
-
-            foreach (var e in _globalEntities)
-            {
-                Console.WriteLine($"  {e}");
-            }
-
-            Console.WriteLine();
-            DespawnAll();
-            Console.WriteLine();
-
-            foreach (var e in _globalEntities)
-            {
-                Console.WriteLine($"  {e}");
-            }
+            Console.WriteLine(CalculateCenter(shapes));
         }
 
         private static void SpawnRandomMob()
@@ -54,6 +43,22 @@ namespace Testing
             {
                 entity.Destroy();
             }
+        }
+
+        private static Point CalculateCenter(List<IPoint> points)
+        {
+            double xSum = 0;
+            double ySum = 0;
+
+            foreach (var point in points)
+            {
+                xSum += point.X;
+                ySum += point.Y;
+            }
+
+            var count = points.Count;
+
+            return new Point(xSum / count, ySum / count);
         }
     }
 }

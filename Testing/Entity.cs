@@ -5,8 +5,18 @@ namespace Minecraft
     public class Entity
     {
         protected int Id;
-        protected readonly string Name;
 
+        public string Name
+        {
+            get
+            {
+                return _name;
+            }
+            protected set => _name = value.ToLower();
+        }
+
+        private string _name;
+        
         public Entity(string name, int id)
         {
             Id = id;
@@ -28,39 +38,45 @@ namespace Minecraft
     public class Mob : Entity
     {
         private const int InitialHealth = 20;
+
+        public int Health
+        {
+            get => _health;
+            protected set => _health = Math.Max(0, value);
+        }
+
         private int _health;
 
         public Mob(string name, int id, int health) : base(name, id)
         {
-            _health = health;
+            Health = health;
         }
 
         public Mob(string name, int id) : base(name, id)
         {
-            _health = InitialHealth;
+            Health = InitialHealth;
         }
 
         public int Damage(int dmg)
         {
-            _health -= dmg;
-            if (_health <= 0)
+            Health = Health - dmg;
+            if (Health <= 0)
             {
                 Destroy();
             }
 
-            return _health;
+            return Health;
         }
 
         public override void Destroy()
         {
             base.Destroy();
-            _health = 0;
-            Console.WriteLine("Mob.Destroy got called");
+            Health = 0;
         }
 
         public override string ToString()
         {
-            return $"Mob(name=\"{Name}\", id={Id}, health={_health})";
+            return $"Mob(name=\"{Name}\", id={Id}, health={Health})";
         }
     }
 }
